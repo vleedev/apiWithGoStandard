@@ -2,8 +2,6 @@
 # Created by https://www.gitignore.io/api/go,macos,jetbrains,sublimetext,jetbrains+iml,jetbrains+all,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=go,macos,jetbrains,sublimetext,jetbrains+iml,jetbrains+all,visualstudiocode
 .env
-go.mod
-go.sum
 ### Go ###
 # Binaries for programs and plugins
 *.exe
