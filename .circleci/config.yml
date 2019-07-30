@@ -29,4 +29,3 @@ jobs:
       - run: go test -v ./...
       - run: pwd
       - run: ls
-      - run: go run server.go
