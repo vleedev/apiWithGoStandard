@@ -6,6 +6,8 @@ jobs:
   build:
     docker:
       - image: circleci/golang
+        environment:
+          GO111MODULE: "on"
     branches:
       only:
         - master
