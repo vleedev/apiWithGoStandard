@@ -12,18 +12,19 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
+// Define response
 func AuthSignIn(w http.ResponseWriter, r *http.Request) {
+	// Define response
+	var res	handles.ResponseResult
 	// Take the context from middleware
 	user := r.Context().Value("signInInfo").(*models.User)
 	passwordInput := user.Password
 	// Get mongodb collection
 	Users := models.UsersCollection()
-	// Define response
-	var res	handles.ResponseResult
 	err := Users.FindOne(context.TODO(), bson.D{{"email", user.Email}}).Decode(&user)
 	if err != nil {
 		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -32,7 +33,7 @@ func AuthSignIn(w http.ResponseWriter, r *http.Request) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwordInput))
 	if err != nil {
 		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -45,14 +46,14 @@ func AuthSignIn(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
 		return
 	}
 	res.SignInToken = tokenString
-	err = json.NewEncoder(w).Encode(res)
+	err = json.NewEncoder(w).Encode(&res)
 	if err != nil {
 		log.Println(err)
 	}

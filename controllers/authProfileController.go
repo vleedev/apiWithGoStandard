@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"encoding/json"
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,9 +14,9 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
-
 func AuthProfile(w http.ResponseWriter, r *http.Request) {
-	var res handles.ResponseResult
+	// Define response
+	var res	handles.ResponseResult
 	tokenString := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
@@ -27,7 +27,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 	})
 	if err != nil {
 		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -43,7 +43,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 		objID, err := primitive.ObjectIDFromHex(ID)
 		if err != nil {
 			res.Message = err.Error()
-			err := json.NewEncoder(w).Encode(res)
+			err := json.NewEncoder(w).Encode(&res)
 			if err != nil {
 				log.Println(err)
 			}
@@ -53,7 +53,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 		err = Users.FindOne(context.TODO(), bson.M{"_id": objID}).Decode(&result)
 		if err != nil {
 			res.Message = err.Error()
-			err := json.NewEncoder(w).Encode(res)
+			err := json.NewEncoder(w).Encode(&res)
 			if err != nil {
 				log.Println(err)
 			}
@@ -66,7 +66,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		res.Message = "Can not claim the information"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}

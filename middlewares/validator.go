@@ -13,7 +13,7 @@ var res	handles.ResponseResult
 func checkEmail(w http.ResponseWriter, s *string) bool {
 	if *s == "" {
 		res.Message = "The email field is empty"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -21,7 +21,7 @@ func checkEmail(w http.ResponseWriter, s *string) bool {
 	}
 	if ! govalidator.IsEmail(*s) {
 		res.Message = "The email is not valid"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -32,7 +32,7 @@ func checkEmail(w http.ResponseWriter, s *string) bool {
 func checkPassword(w http.ResponseWriter, s *string) bool {
 	if *s == "" {
 		res.Message = "The password field is empty"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -43,7 +43,7 @@ func checkPassword(w http.ResponseWriter, s *string) bool {
 func checkFirstName(w http.ResponseWriter, s *string) bool {
 	if *s == "" {
 		res.Message = "The first name field is empty"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -54,7 +54,7 @@ func checkFirstName(w http.ResponseWriter, s *string) bool {
 func checkLastName(w http.ResponseWriter, s *string) bool {
 	if *s == "" {
 		res.Message = "The last name field is empty"
-		err := json.NewEncoder(w).Encode(res)
+		err := json.NewEncoder(w).Encode(&res)
 		if err != nil {
 			log.Println(err)
 		}
@@ -71,7 +71,7 @@ func ValidateSignIn(next http.Handler) http.Handler {
 			err := decoder.Decode(&user)
 			if err != nil {
 				res.Message = err.Error()
-				err := json.NewEncoder(w).Encode(res)
+				err := json.NewEncoder(w).Encode(&res)
 				if err != nil {
 					log.Println(err)
 				}
@@ -89,7 +89,7 @@ func ValidateSignIn(next http.Handler) http.Handler {
 			emailAddress, errr := govalidator.NormalizeEmail(user.Email)
 			if errr != nil {
 				res.Message = errr.Error()
-				err := json.NewEncoder(w).Encode(res)
+				err := json.NewEncoder(w).Encode(&res)
 				if err != nil {
 					log.Println(err)
 				}
@@ -112,7 +112,7 @@ func ValidateSignUp(next http.Handler) http.Handler {
 			err := decoder.Decode(&user)
 			if err != nil {
 				res.Message = err.Error()
-				err := json.NewEncoder(w).Encode(res)
+				err := json.NewEncoder(w).Encode(&res)
 				if err != nil {
 					log.Println(err)
 				}
@@ -138,7 +138,7 @@ func ValidateSignUp(next http.Handler) http.Handler {
 			emailAddress, err := govalidator.NormalizeEmail(user.Email)
 			if err != nil {
 				res.Message = err.Error()
-				err := json.NewEncoder(w).Encode(res)
+				err := json.NewEncoder(w).Encode(&res)
 				if err != nil {
 					log.Println(err)
 				}
