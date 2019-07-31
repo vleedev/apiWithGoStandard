@@ -34,9 +34,5 @@ type User struct {
 	VerifiedByPhone			bool		`json:"verifiedByPhone,omitempty"`
 }
 func UsersCollection() *mongo.Collection {
-	db, err := databases.MongoDB()
-	if err != nil {
-		panic(err)
-	}
-	return db.Collection("Users")
+	return databases.MongoDB().Collection("Users")
 }

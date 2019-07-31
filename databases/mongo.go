@@ -4,10 +4,12 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"os"
+	"time"
 )
 
-func MongoDB() (*mongo.Database, error) {
+func MongoDB() *mongo.Database {
 	a	:= os.Getenv("DB_ADDRESS")
 	p 	:= os.Getenv("DB_PORT")
 	d	:= os.Getenv("DB_DATABASE")
@@ -17,14 +19,16 @@ func MongoDB() (*mongo.Database, error) {
 	uri := "mongodb://" + u + ":" + pass + "@" + a + ":" + p + "/" + d
 	clientOptions := options.Client().ApplyURI(uri)
 	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		return nil, err
+		log.Println(err)
 	}
 	// Check the connection
-	err = client.Ping(context.TODO(), nil)
+	err = client.Ping(ctx, nil)
 	if err != nil {
-		return nil, err
+		log.Println(err)
 	}
-	return client.Database(d), nil
+	log.Println("Connect to mongodb successfully")
+	return client.Database(d)
 }

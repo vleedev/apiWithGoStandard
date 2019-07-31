@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/asaskevich/govalidator"
+	"log"
 	"net/http"
 	"vlee/handles"
 	"vlee/models"
@@ -14,7 +15,7 @@ func checkEmail(w http.ResponseWriter, s *string) bool {
 		res.Message = "The email field is empty"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return false
 	}
@@ -22,7 +23,7 @@ func checkEmail(w http.ResponseWriter, s *string) bool {
 		res.Message = "The email is not valid"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return false
 	}
@@ -33,7 +34,7 @@ func checkPassword(w http.ResponseWriter, s *string) bool {
 		res.Message = "The password field is empty"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return false
 	}
@@ -44,7 +45,7 @@ func checkFirstName(w http.ResponseWriter, s *string) bool {
 		res.Message = "The first name field is empty"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return false
 	}
@@ -55,7 +56,7 @@ func checkLastName(w http.ResponseWriter, s *string) bool {
 		res.Message = "The last name field is empty"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return false
 	}
@@ -65,38 +66,38 @@ func ValidateSignIn(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {
 			// Define response
-			var i models.User
+			var user models.User
 			decoder := json.NewDecoder(r.Body)
-			err := decoder.Decode(&i)
+			err := decoder.Decode(&user)
 			if err != nil {
 				res.Message = err.Error()
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
 			// Check email
-			if ! checkEmail(w, &i.Email) {
+			if ! checkEmail(w, &user.Email) {
 				return
 			}
 			// Check password
-			if ! checkPassword(w, &i.Password) {
+			if ! checkPassword(w, &user.Password) {
 				return
 			}
 			// Normalize email
-			emailAddress, errr := govalidator.NormalizeEmail(i.Email)
+			emailAddress, errr := govalidator.NormalizeEmail(user.Email)
 			if errr != nil {
 				res.Message = errr.Error()
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
-			i.Email = emailAddress
+			user.Email = emailAddress
 			// Pass these to context with value
-			ctx := context.WithValue(r.Context(), "signInInfo", &i)
+			ctx := context.WithValue(r.Context(), "signInInfo", &user)
 			r = r.WithContext(ctx)
 		}
 		next.ServeHTTP(w, r) // Next
@@ -106,46 +107,46 @@ func ValidateSignUp(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {
 			// Define response
-			var i models.User
+			var user models.User
 			decoder := json.NewDecoder(r.Body)
-			err := decoder.Decode(&i)
+			err := decoder.Decode(&user)
 			if err != nil {
 				res.Message = err.Error()
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
 			// Check first name
-			if ! checkFirstName(w, &i.FirstName) {
+			if ! checkFirstName(w, &user.FirstName) {
 				return
 			}
 			// Check last name
-			if ! checkLastName(w, &i.LastName) {
+			if ! checkLastName(w, &user.LastName) {
 				return
 			}
 			// Check email
-			if ! checkEmail(w, &i.Email) {
+			if ! checkEmail(w, &user.Email) {
 				return
 			}
 			// Check password
-			if ! checkPassword(w, &i.Password) {
+			if ! checkPassword(w, &user.Password) {
 				return
 			}
 			// Normalize email
-			emailAddress, err := govalidator.NormalizeEmail(i.Email)
+			emailAddress, err := govalidator.NormalizeEmail(user.Email)
 			if err != nil {
 				res.Message = err.Error()
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
-			i.Email = emailAddress
+			user.Email = emailAddress
 
-			ctx := context.WithValue(r.Context(), "signUpInfo", &i)
+			ctx := context.WithValue(r.Context(), "signUpInfo", &user)
 			r = r.WithContext(ctx)
 		}
 		next.ServeHTTP(w, r) // Next

@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -28,7 +29,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}
@@ -44,7 +45,7 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 			res.Message = err.Error()
 			err := json.NewEncoder(w).Encode(res)
 			if err != nil {
-				panic(err)
+				log.Println(err)
 			}
 			return
 		}
@@ -54,20 +55,20 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 			res.Message = err.Error()
 			err := json.NewEncoder(w).Encode(res)
 			if err != nil {
-				panic(err)
+				log.Println(err)
 			}
 			return
 		}
 		err = json.NewEncoder(w).Encode(result)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	} else {
 		res.Message = "Can not claim the information"
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}

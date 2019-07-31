@@ -20,7 +20,7 @@ func middlewareForAll(next http.Handler) http.Handler {
 			res.Message = "We only accept Content-Type as application/json"
 			err := json.NewEncoder(w).Encode(res)
 			if err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 			return
 		}

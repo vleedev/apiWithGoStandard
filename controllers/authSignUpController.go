@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 	"net/http"
 	"vlee/handles"
 	"vlee/models"
@@ -25,7 +26,7 @@ func AuthSignUp(w http.ResponseWriter, r *http.Request) {
 				res.Message = "Error While Hashing Password, Try Again"
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
@@ -36,21 +37,21 @@ func AuthSignUp(w http.ResponseWriter, r *http.Request) {
 				res.Message = "Error While Creating User, Try Again"
 				err := json.NewEncoder(w).Encode(res)
 				if err != nil {
-					panic(err)
+					log.Println(err)
 				}
 				return
 			}
 			res.Message = "Registration Successful"
 			err = json.NewEncoder(w).Encode(res)
 			if err != nil {
-				panic(err)
+				log.Println(err)
 			}
 			return
 		}
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}
@@ -58,7 +59,7 @@ func AuthSignUp(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(409)
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	return
 }

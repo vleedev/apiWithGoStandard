@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 	"net/http"
 	"os"
 	"vlee/handles"
@@ -24,7 +25,7 @@ func AuthSignIn(w http.ResponseWriter, r *http.Request) {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}
@@ -33,7 +34,7 @@ func AuthSignIn(w http.ResponseWriter, r *http.Request) {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}
@@ -46,13 +47,13 @@ func AuthSignIn(w http.ResponseWriter, r *http.Request) {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(res)
 		if err != nil {
-			panic(err)
+			log.Println(err)
 		}
 		return
 	}
 	res.SignInToken = tokenString
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 }
