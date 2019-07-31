@@ -28,10 +28,10 @@ type User struct {
 	Roles					bsonx.Arr	`bson:"roles,omitempty"`
 	ChatBoxes				bsonx.Arr	`bson:"chatBoxes,omitempty"`
 	UserActivities			bsonx.Arr	`bson:"userActivities,omitempty"`
-	CreatedAt				uint32		`json:"createdAt,omitempty"`
-	UpdatedAt				uint32		`json:"updatedAt,omitempty"`
-	VerifiedByEmail			bool		`json:"verifiedByEmail,omitempty"`
-	VerifiedByPhone			bool		`json:"verifiedByPhone,omitempty"`
+	CreatedAt				int64		`json:"createdAt,omitempty"`
+	UpdatedAt				int64		`json:"updatedAt,omitempty"`
+	VerifiedByEmail			bool		`json:"verifiedByEmail" default:"false"`
+	VerifiedByPhone			bool		`json:"verifiedByPhone" default:"false"`
 }
 func UsersCollection() *mongo.Collection {
 	return databases.MongoDB().Collection("Users")

@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
+	"time"
 	"vlee/handles"
 	"vlee/models"
 )
@@ -30,7 +31,8 @@ func AuthSignUp(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			user.Password = string(hash)
-
+			user.CreatedAt = time.Now().UnixNano()
+			user.UpdatedAt = time.Now().UnixNano()
 			_, err = Users.InsertOne(context.TODO(), user)
 			if err != nil {
 				res.Message = "Error While Creating User, Try Again"
