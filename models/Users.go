@@ -38,5 +38,5 @@ func UsersCollection() *mongo.Collection {
 	if err != nil {
 		panic(err)
 	}
-	return db.Collection("SignUP")
+	return db.Collection("Users")
 }
