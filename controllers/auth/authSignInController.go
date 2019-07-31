@@ -1,4 +1,4 @@
-package controllers
+package authcontrollers
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"vlee/models"
 )
 // Define response
-func AuthSignIn(w http.ResponseWriter, r *http.Request) {
+func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult
 	// Take the context from middleware

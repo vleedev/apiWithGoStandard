@@ -1,4 +1,4 @@
-package controllers
+package authcontrollers
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
-func AuthProfile(w http.ResponseWriter, r *http.Request) {
+func Profile(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult
 	tokenString := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
@@ -59,7 +59,10 @@ func AuthProfile(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-		err = json.NewEncoder(w).Encode(result)
+		// Hide some fields before showing
+		result.Password = ""
+		// Response to the client
+		err = json.NewEncoder(w).Encode(&result)
 		if err != nil {
 			log.Println(err)
 		}
