@@ -12,6 +12,10 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
+/*
+*	The signing in controller
+*	Author: vlee.dev
+ */
 // Define response
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Define response

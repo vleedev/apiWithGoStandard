@@ -14,6 +14,10 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
+/*
+*	The profile controller
+*	Author: vlee.dev
+ */
 func Profile(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult

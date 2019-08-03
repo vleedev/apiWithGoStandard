@@ -7,7 +7,10 @@ import (
 	"net/http"
 	"vlee/handles"
 )
-
+/*
+*	The library for validating middleware
+*	Author: vlee.dev
+ */
 var res	handles.ResponseResult
 func checkEmail(w http.ResponseWriter, s *string) bool {
 	if *s == "" {

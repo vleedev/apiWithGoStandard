@@ -8,7 +8,10 @@ import (
 	"net/http"
 	"vlee/models"
 )
-
+/*
+*	The middleware for signing up
+*	Author: vlee.dev
+ */
 func SignUp(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "POST" {

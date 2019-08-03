@@ -6,7 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/x/bsonx"
 	"vlee/databases"
 )
-
+/*
+*	The model for users
+*	Author: vlee.dev
+ */
 type User struct {
 	ID			primitive.ObjectID 		`bson:"_id,omitempty"`
 	Email  					string		`json:"email,omitempty"`

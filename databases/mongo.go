@@ -8,7 +8,10 @@ import (
 	"os"
 	"time"
 )
-
+/*
+*	The connect driver for mongodb
+*	Author: vlee.dev
+ */
 func MongoDB() *mongo.Database {
 	a	:= os.Getenv("DB_ADDRESS")
 	p 	:= os.Getenv("DB_PORT")

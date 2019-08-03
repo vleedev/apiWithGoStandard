@@ -11,7 +11,10 @@ import (
 	"vlee/handles"
 	"vlee/models"
 )
-
+/*
+*	The signing up controller
+*	Author: vlee.dev
+ */
 func SignUp(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult
