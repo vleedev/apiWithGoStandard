@@ -1,18 +1,16 @@
 package authcontrollers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 	"vlee/handles"
-	"vlee/models"
+	"vlee/repositories/repoimpls"
 )
 /*
 *	The profile controller
@@ -21,7 +19,24 @@ import (
 func Profile(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult
-	tokenString := strings.Split(r.Header.Get("Authorization"), "Bearer ")[1]
+	var tokenString string
+	// Check the header has the field "Authorization"
+	if values, ok := r.Header["Authorization"]; ok {
+		// Check in slice
+		for _, val := range values {
+			if strings.Contains(val,"Bearer ") {
+				tokenString = strings.Split(val, "Bearer ")[1]
+			}
+		}
+	}
+	if tokenString == "" {
+		res.Message = "Token is not found!"
+		err := json.NewEncoder(w).Encode(&res)
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -37,12 +52,11 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	var result models.User
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		// Take id string
 		ID := claims["_id"].(string)
 		// Model Users
-		Users := models.UsersCollection()
+		userRepo := repoimpls.NewUserRepo()
 		// Convert ID string to ID Object
 		objID, err := primitive.ObjectIDFromHex(ID)
 		if err != nil {
@@ -54,7 +68,7 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// Use objID to search in database
-		err = Users.FindOne(context.TODO(), bson.M{"_id": objID}).Decode(&result)
+		user, err := userRepo.GetUserByObjectID(&objID)
 		if err != nil {
 			res.Message = err.Error()
 			err := json.NewEncoder(w).Encode(&res)
@@ -64,9 +78,9 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		// Hide some fields before showing
-		result.Password = ""
+		user.Password = ""
 		// Response to the client
-		err = json.NewEncoder(w).Encode(&result)
+		err = json.NewEncoder(w).Encode(&user)
 		if err != nil {
 			log.Println(err)
 		}

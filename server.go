@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"vlee/databases"
 	"vlee/handles"
 	"vlee/routers"
 )
@@ -43,6 +44,8 @@ func main() {
 	r := http.NewServeMux()
 	// Define routers
 	routers.Go(r)
+	// Connect MongoDB and create an instance
+	databases.ConnectMongoDB()
 	// Listen and serve
 	s := &http.Server{
 		Addr:           ":" + os.Getenv("APP_PORT"),

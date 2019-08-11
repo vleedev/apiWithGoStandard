@@ -1,16 +1,14 @@
 package authcontrollers
 
 import (
-	"context"
 	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/bson"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 	"net/http"
 	"os"
 	"vlee/handles"
 	"vlee/models"
+	"vlee/repositories/repoimpls"
 )
 /*
 *	The signing in controller
@@ -21,11 +19,10 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Define response
 	var res	handles.ResponseResult
 	// Take the context from middleware
-	user := r.Context().Value("signInInfo").(*models.User)
-	passwordInput := user.Password
-	// Get mongodb collection
-	Users := models.UsersCollection()
-	err := Users.FindOne(context.TODO(), bson.D{{"email", user.Email}}).Decode(&user)
+	signInInfo := r.Context().Value("signInInfo").(*models.User)
+	// Work with mongodb via repository
+	userRepo := repoimpls.NewUserRepo()
+	user, err := userRepo.CheckSignInInfo(&signInInfo.Email, &signInInfo.Password)
 	if err != nil {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(&res)
@@ -34,20 +31,12 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwordInput))
-	if err != nil {
-		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
-		return
-	}
+	// Prepare the information to generate token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"_id":  user.ID, // Like this 5d3c263b9359848037ff3787
 	})
+	// Generate the token
 	tokenString, err := token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
-
 	if err != nil {
 		res.Message = err.Error()
 		err := json.NewEncoder(w).Encode(&res)

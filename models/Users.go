@@ -2,9 +2,7 @@ package models
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/x/bsonx"
-	"vlee/databases"
 )
 /*
 *	The model for users
@@ -35,7 +33,4 @@ type User struct {
 	UpdatedAt				int64		`json:"updatedAt,omitempty"`
 	VerifiedByEmail			bool		`json:"verifiedByEmail" default:"false"`
 	VerifiedByPhone			bool		`json:"verifiedByPhone" default:"false"`
-}
-func UsersCollection() *mongo.Collection {
-	return databases.MongoDB().Collection("Users")
 }
