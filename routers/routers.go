@@ -5,7 +5,7 @@ import (
 )
 /*
 *	The main router
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 // Go function
 func Go(r *http.ServeMux) {

@@ -7,7 +7,7 @@ import (
 )
 /*
 *	The main router for authentication
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 func authRouters(prefix string, r *http.ServeMux) {
 	r.Handle(prefix + "/signIn", validator.SignIn(http.HandlerFunc(auth.SignIn)))

@@ -2,5 +2,5 @@ package routers
 
 /*
 *	The main router for chatting
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */

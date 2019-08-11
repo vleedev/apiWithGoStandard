@@ -4,13 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/asaskevich/govalidator"
-	"log"
 	"net/http"
 	"vlee/models"
 )
 /*
 *	The middleware for signing up
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 func SignUp(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -20,11 +19,8 @@ func SignUp(next http.Handler) http.Handler {
 			decoder := json.NewDecoder(r.Body)
 			err := decoder.Decode(&user)
 			if err != nil {
-				res.Message = err.Error()
-				err := json.NewEncoder(w).Encode(&res)
-				if err != nil {
-					log.Println(err)
-				}
+				gRes.Message = err.Error()
+				gRes.Response(w)
 				return
 			}
 			// Check first name
@@ -46,11 +42,8 @@ func SignUp(next http.Handler) http.Handler {
 			// Normalize email
 			emailAddress, err := govalidator.NormalizeEmail(user.Email)
 			if err != nil {
-				res.Message = err.Error()
-				err := json.NewEncoder(w).Encode(&res)
-				if err != nil {
-					log.Println(err)
-				}
+				gRes.Message = err.Error()
+				gRes.Response(w)
 				return
 			}
 			user.Email = emailAddress

@@ -1,11 +1,9 @@
 package authcontrollers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -14,11 +12,12 @@ import (
 )
 /*
 *	The profile controller
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 func Profile(w http.ResponseWriter, r *http.Request) {
 	// Define response
-	var res	handles.ResponseResult
+	var gRes	handles.GeneralMessage
+	var pRes	handles.ProfileMessage
 	var tokenString string
 	// Check the header has the field "Authorization"
 	if values, ok := r.Header["Authorization"]; ok {
@@ -30,11 +29,8 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if tokenString == "" {
-		res.Message = "Token is not found!"
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
+		gRes.Message = "Token is not found!"
+		gRes.Response(w)
 		return
 	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -45,11 +41,8 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		return []byte(os.Getenv("TOKEN_SECRET")), nil
 	})
 	if err != nil {
-		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
+		gRes.Message = err.Error()
+		gRes.Response(w)
 		return
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
@@ -60,37 +53,26 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		// Convert ID string to ID Object
 		objID, err := primitive.ObjectIDFromHex(ID)
 		if err != nil {
-			res.Message = err.Error()
-			err := json.NewEncoder(w).Encode(&res)
-			if err != nil {
-				log.Println(err)
-			}
+			gRes.Message = err.Error()
+			gRes.Response(w)
 			return
 		}
 		// Use objID to search in database
 		user, err := userRepo.GetUserByObjectID(&objID)
 		if err != nil {
-			res.Message = err.Error()
-			err := json.NewEncoder(w).Encode(&res)
-			if err != nil {
-				log.Println(err)
-			}
+			gRes.Message = err.Error()
+			gRes.Response(w)
 			return
 		}
 		// Hide some fields before showing
 		user.Password = ""
 		// Response to the client
-		err = json.NewEncoder(w).Encode(&user)
-		if err != nil {
-			log.Println(err)
-		}
+		pRes.MyProfile = user
+		pRes.Response(w)
 		return
 	} else {
-		res.Message = "Can not claim the information"
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
+		gRes.Message = "Can not claim the information"
+		gRes.Response(w)
 		return
 	}
 }

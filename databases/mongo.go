@@ -12,9 +12,8 @@ import (
 )
 /*
 *	The connect driver for mongodb
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
-var MongoInstance *mongo.Database
 func ConnectMongoDB() {
 	a	:= os.Getenv("DB_ADDRESS")
 	p 	:= os.Getenv("DB_PORT")
@@ -28,13 +27,13 @@ func ConnectMongoDB() {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	// Check the connection
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	log.Println("Connect to mongodb successfully")
-	MongoInstance = client.Database(d)
+	DBSessions.MongoInstance = client.Database(d)
 }

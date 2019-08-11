@@ -16,7 +16,7 @@ type UserRepoImpl struct {
 	MongoCollection	*mongo.Collection
 }
 func NewUserRepo() repositories.UserRepo {
-	return &UserRepoImpl{MongoCollection:databases.MongoInstance.Collection("Users")}
+	return &UserRepoImpl{MongoCollection:databases.DBSessions.MongoInstance.Collection("Users")}
 }
 func (u UserRepoImpl) AllUsers() ([]*models.User, error) {
 	users := make([]*models.User, 0)
@@ -41,6 +41,8 @@ func (u UserRepoImpl) AllUsers() ([]*models.User, error) {
 	return users, nil
 }
 func (u UserRepoImpl) InsertOneUser(user *models.User) error {
+	user.CreatedAt = time.Now().UnixNano()
+	user.UpdatedAt = time.Now().UnixNano()
 	_, err := u.MongoCollection.InsertOne(context.TODO(), user)
 	if err != nil {
 		return err

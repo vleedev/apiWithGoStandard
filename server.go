@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
@@ -13,19 +12,16 @@ import (
 )
 /*
 *	The main package
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 func middlewareForAll(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		if r.Method == "POST" && r.Header.Get("Content-Type") != "application/json" {
 			// Define response
-			var res	handles.ResponseResult
-			res.Message = "We only accept Content-Type as application/json"
-			err := json.NewEncoder(w).Encode(&res)
-			if err != nil {
-				log.Fatal(err)
-			}
+			var gRes	handles.GeneralMessage
+			gRes.Message = "We only accept Content-Type as application/json"
+			gRes.Response(w)
 			return
 		}
 		// Do stuff here

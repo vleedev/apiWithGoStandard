@@ -1,9 +1,7 @@
 package authcontrollers
 
 import (
-	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
-	"log"
 	"net/http"
 	"os"
 	"vlee/handles"
@@ -12,23 +10,21 @@ import (
 )
 /*
 *	The signing in controller
-*	Author: vlee.dev
+*	Author: Lee Tuan
  */
 // Define response
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Define response
-	var res	handles.ResponseResult
+	var gRes	handles.GeneralMessage
+	var siRes	handles.SignInMessage
 	// Take the context from middleware
 	signInInfo := r.Context().Value("signInInfo").(*models.User)
 	// Work with mongodb via repository
 	userRepo := repoimpls.NewUserRepo()
 	user, err := userRepo.CheckSignInInfo(&signInInfo.Email, &signInInfo.Password)
 	if err != nil {
-		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
+		gRes.OriginalMessage = err.Error()
+		gRes.Response(w)
 		return
 	}
 	// Prepare the information to generate token
@@ -38,16 +34,10 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	// Generate the token
 	tokenString, err := token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
 	if err != nil {
-		res.Message = err.Error()
-		err := json.NewEncoder(w).Encode(&res)
-		if err != nil {
-			log.Println(err)
-		}
+		gRes.OriginalMessage = err.Error()
+		gRes.Response(w)
 		return
 	}
-	res.SignInToken = tokenString
-	err = json.NewEncoder(w).Encode(&res)
-	if err != nil {
-		log.Println(err)
-	}
+	siRes.Token = tokenString
+	siRes.Response(w)
 }
