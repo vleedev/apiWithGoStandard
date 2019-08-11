@@ -34,6 +34,6 @@ func ConnectMongoDB() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Connect to mongodb successfully")
+	log.Printf("Connect to mongodb on %s successfully", a)
 	DBSessions.MongoInstance = client.Database(d)
 }

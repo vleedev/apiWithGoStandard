@@ -50,6 +50,6 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	log.Println("The app is running")
+	log.Printf("The app is running on %s", os.Getenv("APP_PORT"))
 	log.Fatal(s.ListenAndServe())
 }
