@@ -10,20 +10,21 @@ import (
 	"vlee/handles"
 	"vlee/repositories/repoimpls"
 )
+
 /*
 *	The profile controller
 *	Author: Lee Tuan
  */
 func Profile(w http.ResponseWriter, r *http.Request) {
 	// Define response
-	var gRes	handles.GeneralMessage
-	var pRes	handles.ProfileMessage
+	var gRes handles.GeneralMessage
+	var pRes handles.ProfileMessage
 	var tokenString string
 	// Check the header has the field "Authorization"
 	if values, ok := r.Header["Authorization"]; ok {
 		// Check in slice
 		for _, val := range values {
-			if strings.Contains(val,"Bearer ") {
+			if strings.Contains(val, "Bearer ") {
 				tokenString = strings.Split(val, "Bearer ")[1]
 			}
 		}
@@ -67,7 +68,21 @@ func Profile(w http.ResponseWriter, r *http.Request) {
 		// Hide some fields before showing
 		user.Password = ""
 		// Response to the client
-		pRes.MyProfile = user
+		pRes.Email = user.Email
+		pRes.FirstName = user.FirstName
+		pRes.LastName = user.LastName
+		pRes.Address = user.Address
+		pRes.Avatar = user.Avatar
+		pRes.Birthday = user.Birthday
+		pRes.Facebook = user.Facebook
+		pRes.Language = user.Language
+		pRes.LocationLat = user.LocationLat
+		pRes.LocationLon = user.LocationLon
+		pRes.Telephone = user.Telephone
+		pRes.CreatedAt = user.CreatedAt
+		pRes.UpdatedAt = user.UpdatedAt
+		pRes.VerifiedByEmail = user.VerifiedByEmail
+		pRes.VerifiedByPhone = user.VerifiedByPhone
 		pRes.Response(w)
 		return
 	} else {
